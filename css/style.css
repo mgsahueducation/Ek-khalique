@@ -207,6 +207,18 @@ body::before {
   cursor: pointer;
 }
 
+/* Author name under profile photo */
+.photo-name {
+  text-align: center;
+  color: var(--gold);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: -10px 0 25px;
+  letter-spacing: 0.5px;
+  transform: translateZ(30px);
+  text-shadow: 0 2px 8px rgba(212,175,55,0.3);
+}
+
 /* Upload button */
 .upload-btn {
   display: block;
@@ -278,7 +290,7 @@ h1 {
   line-height: 2;
 }
 
-/* Section headings */
+/* Section headings (main sections) */
 .section-heading {
   color: var(--gold);
   font-size: clamp(1.3rem, 3vw, 1.7rem);
@@ -286,6 +298,16 @@ h1 {
   padding-bottom: 10px;
   border-bottom: 1px solid var(--border-gold);
   line-height: 1.8;
+}
+
+/* Sub-headings (smaller sections) */
+.sub-heading {
+  color: var(--gold);
+  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+  margin: 28px 0 14px;
+  line-height: 1.9;
+  font-weight: 700;
+  opacity: 0.95;
 }
 
 /* Grid cards */
@@ -359,6 +381,20 @@ h1 {
   font-weight: 600;
 }
 
+/* To be continued text — end of Part 1 */
+.to-be-continued-text {
+  text-align: center;
+  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+  font-weight: 700;
+  color: var(--gold);
+  padding: 22px 20px;
+  margin: 40px auto 10px;
+  border-top: 1px solid var(--border-gold);
+  border-bottom: 1px solid var(--border-gold);
+  max-width: 400px;
+  line-height: 2;
+}
+
 /* CTA button */
 .cta-btn {
   display: block;
@@ -415,15 +451,4 @@ footer .author {
   .nav-links a { padding: 6px 14px; font-size: 0.95rem; }
   .theme-toggle { top: 110px; left: 16px; width: 42px; height: 42px; }
   body { padding-top: 130px; }
-  }
-/* Author name under profile photo */
-.photo-name {
-  text-align: center;
-  color: var(--gold);
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin: -10px 0 25px;
-  letter-spacing: 0.5px;
-  transform: translateZ(30px);
-  text-shadow: 0 2px 8px rgba(212,175,55,0.3);
 }
