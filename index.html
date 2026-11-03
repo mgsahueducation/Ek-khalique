@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ایک خالق، کئی راستے — حصہ اول</title>
+<meta name="description" content="مذہب کا ایک فلسفہ — از قلم مشتاق احمد وافی">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mehr-o-mah/UrduFonts@main/jameel-noori-nastaleeq.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -24,18 +25,20 @@
 <main class="container">
   <div class="card" id="tiltCard">
 
-    <!-- Profile Picture -->
+    <!-- ===== PROFILE PICTURE (profile.png) ===== -->
     <div class="photo-frame">
       <div class="photo-inner">
-        <img id="profilePic" alt="Profile">
-        <div class="photo-placeholder" id="placeholder">📷</div>
+        <img id="profilePic"
+             src="profile.png"
+             alt="مشتاق احمد وافی"
+             class="loaded"
+             onerror="this.style.display='none'; document.getElementById('placeholder').style.display='block';">
+        <div class="photo-placeholder" id="placeholder" style="display:none;">📷</div>
       </div>
     </div>
 
-    <input type="file" id="fileInput" accept="image/*" hidden>
-    <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
-      تصویر منتخب کریں
-    </button>
+    <!-- Author name under photo -->
+    <p class="photo-name">مشتاق احمد وافی</p>
 
     <!-- Title -->
     <h1>ایک خالق، کئی راستے</h1>
@@ -50,6 +53,12 @@
         اور ان کے پیروکار اکثر ایک دوسرے کے مقابل کھڑے نظر آتے ہیں۔
         مگر اس سب کے نیچے ایک ایسی حقیقت ہے جس سے کوئی دیانت داری سے انکار نہیں کر سکتا:
         <span class="highlight">دنیا بھر کے انسان ایک ہی طرح بنائے گئے ہیں۔</span>
+      </p>
+
+      <p>
+        کسی بھی ملک کے، کسی بھی مذہب کے انسان میں ایک ہی نظامِ ہاضمہ،
+        ایک جیسے اعضا اور ایک جیسی جسمانی ساخت ہے۔
+        یہی وہ نقطۂ آغاز ہے جس پر آگے کی ساری بات قائم ہے۔
       </p>
 
       <p class="quote">
@@ -70,6 +79,11 @@
         یہ سوال ایمان پر حملہ نہیں۔ یہ حقیقی ایمان کی ابتدا ہے۔
         جو شخص سوچتا ہے، سوال کرتا ہے اور سوچ سمجھ کر چنتا ہے
         وہ کھلی آنکھوں سے چلتا ہے، اور یہی وہ آزادی ہے جو خالق نے ہمیں دی۔
+      </p>
+
+      <p class="quote">
+        آپ کو بھی اسی بنانے والے نے بنایا ہے جس نے ہر دوسرے انسان کو بنایا۔<br>
+        امتحان ابھی جاری ہے۔ سوچ سمجھ کر چنیں، پورے شعور سے چنیں، اور صاف دل سے چنیں۔
       </p>
     </div>
 
