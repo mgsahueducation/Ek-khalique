@@ -416,3 +416,14 @@ footer .author {
   .theme-toggle { top: 110px; left: 16px; width: 42px; height: 42px; }
   body { padding-top: 130px; }
   }
+/* Author name under profile photo */
+.photo-name {
+  text-align: center;
+  color: var(--gold);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: -10px 0 25px;
+  letter-spacing: 0.5px;
+  transform: translateZ(30px);
+  text-shadow: 0 2px 8px rgba(212,175,55,0.3);
+}
