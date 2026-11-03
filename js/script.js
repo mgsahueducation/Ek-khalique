@@ -1,1 +1,1 @@
-// JavaScript cleared to keep the colorful design perfectly still.
+// Page is completely still and static.
