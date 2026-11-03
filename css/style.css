@@ -12,6 +12,8 @@
   --text-main: #f5f0e1;
   --text-soft: rgba(245,240,225,0.75);
   --border-gold: rgba(212,175,55,0.35);
+  --mouse-x: 50%;
+  --mouse-y: 50%;
 }
 
 [data-theme="light"] {
@@ -37,7 +39,8 @@ body {
   min-height: 100vh;
   padding: 90px 20px 40px;
   transition: background 0.6s, color 0.6s;
-  perspective: 1200px;
+  perspective: 800px;                 /* ← closer = more 3D depth */
+  perspective-origin: 50% 40%;
   overflow-x: hidden;
 }
 
@@ -130,7 +133,7 @@ body::before {
   box-shadow: 0 0 25px rgba(212,175,55,0.6);
 }
 
-/* Container & Card */
+/* Container */
 .container {
   position: relative;
   z-index: 1;
@@ -146,40 +149,81 @@ body::before {
   to { opacity: 1; transform: translateY(0) rotateX(0); }
 }
 
+/* =============== THE 3D CARD =============== */
 .card {
+  position: relative;
   background: linear-gradient(145deg, var(--card-bg-1), var(--card-bg-2));
   border: 1px solid var(--border-gold);
   border-radius: 28px;
   padding: 50px 40px;
+  transform-style: preserve-3d;
+  transform:
+    rotateX(var(--rx, 0deg))
+    rotateY(var(--ry, 0deg))
+    translateZ(0);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.4s,
+              background 0.6s;
   box-shadow:
     0 30px 60px rgba(0,0,0,0.7),
     0 0 80px rgba(212,175,55,0.08),
     inset 0 1px 0 rgba(255,255,255,0.08);
   backdrop-filter: blur(12px);
-  transform-style: preserve-3d;
-  transition: transform 0.15s ease-out, box-shadow 0.4s, background 0.6s;
+  will-change: transform;
+  animation: cardIdle 8s ease-in-out infinite;
 }
 
-.card:hover {
-  box-shadow:
-    0 40px 80px rgba(0,0,0,0.8),
-    0 0 120px rgba(212,175,55,0.15);
+/* Gentle breathing when NOT hovered */
+@keyframes cardIdle {
+  0%, 100% { transform: rotateX(0deg) rotateY(0deg) translateZ(0); }
+  50%      { transform: rotateX(1.5deg) rotateY(-1.5deg) translateZ(8px); }
 }
 
-/* Photo */
+/* Stop idle animation when hovered — JS takes over */
+.card.is-tilting {
+  animation: none;
+}
+
+/* Cursor-following golden glow */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 28px;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(212,175,55,0.14),
+    transparent 55%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+  z-index: 0;
+}
+
+.card.is-tilting::before { opacity: 1; }
+
+/* All children sit above the glow layer */
+.card > * { position: relative; z-index: 1; }
+
+/* Photo — floats on top of everything */
 .photo-frame {
   width: 190px; height: 190px;
   margin: 0 auto 30px;
   border-radius: 50%;
   padding: 6px;
   background: conic-gradient(from 0deg, var(--gold), #fff8dc, var(--gold), #b8860b, var(--gold));
-  box-shadow: 0 0 40px rgba(212,175,55,0.5), 0 20px 40px rgba(0,0,0,0.6);
-  transform: translateZ(40px);
+  box-shadow:
+    0 0 40px rgba(212,175,55,0.5),
+    0 20px 40px rgba(0,0,0,0.6),
+    0 30px 60px rgba(212,175,55,0.15);
+  transform: translateZ(80px);          /* ← floats highest */
   animation: rotateGlow 8s linear infinite;
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @keyframes rotateGlow {
-  0% { background: conic-gradient(from 0deg, var(--gold), #fff8dc, var(--gold), #b8860b, var(--gold)); }
+  0%   { background: conic-gradient(from 0deg, var(--gold), #fff8dc, var(--gold), #b8860b, var(--gold)); }
   100% { background: conic-gradient(from 360deg, var(--gold), #fff8dc, var(--gold), #b8860b, var(--gold)); }
 }
 
@@ -207,7 +251,7 @@ body::before {
   cursor: pointer;
 }
 
-/* Author name under profile photo */
+/* Author name — floats above card */
 .photo-name {
   text-align: center;
   color: var(--gold);
@@ -215,8 +259,9 @@ body::before {
   font-weight: 700;
   margin: -10px 0 25px;
   letter-spacing: 0.5px;
-  transform: translateZ(30px);
+  transform: translateZ(55px);          /* ← floats high */
   text-shadow: 0 2px 8px rgba(212,175,55,0.3);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 /* Upload button */
@@ -233,26 +278,30 @@ body::before {
   font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.4s;
-  transform: translateZ(25px);
+  transform: translateZ(45px);
 }
 
 .upload-btn:hover {
   background: var(--gold);
   color: var(--deep-green);
   box-shadow: 0 0 30px rgba(212,175,55,0.6);
-  transform: translateZ(35px) scale(1.05);
+  transform: translateZ(60px) scale(1.05);
 }
 
-/* Typography */
+/* Title — floats high */
 h1 {
   font-size: clamp(1.8rem, 5vw, 3rem);
   text-align: center;
   line-height: 2;
   color: var(--gold);
-  text-shadow: 0 2px 4px rgba(0,0,0,0.6), 0 0 30px rgba(212,175,55,0.4);
+  text-shadow:
+    0 2px 4px rgba(0,0,0,0.6),
+    0 0 30px rgba(212,175,55,0.4),
+    0 8px 20px rgba(0,0,0,0.5);
   margin-bottom: 15px;
-  transform: translateZ(30px);
+  transform: translateZ(50px);
   font-weight: 700;
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .subtitle {
@@ -261,19 +310,27 @@ h1 {
   color: var(--text-soft);
   line-height: 2;
   margin-bottom: 30px;
+  transform: translateZ(30px);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .divider {
   width: 120px; height: 2px;
   margin: 0 auto 40px;
   background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  transform: translateZ(25px);
+  box-shadow: 0 0 15px rgba(212,175,55,0.4);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
+/* Body content sits slightly recessed */
 .content {
   font-size: clamp(1.05rem, 2.3vw, 1.25rem);
   line-height: 2.4;
   color: var(--text-main);
   text-align: justify;
+  transform: translateZ(10px);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .content p { margin-bottom: 22px; }
@@ -288,9 +345,11 @@ h1 {
   color: var(--gold);
   font-size: 1.15em;
   line-height: 2;
+  transform: translateZ(20px);
+  box-shadow: -4px 0 20px rgba(212,175,55,0.15);
 }
 
-/* Section headings (main sections) */
+/* Section headings — mid depth */
 .section-heading {
   color: var(--gold);
   font-size: clamp(1.3rem, 3vw, 1.7rem);
@@ -298,9 +357,12 @@ h1 {
   padding-bottom: 10px;
   border-bottom: 1px solid var(--border-gold);
   line-height: 1.8;
+  transform: translateZ(25px);
+  text-shadow: 0 2px 8px rgba(212,175,55,0.2);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* Sub-headings (smaller sections) */
+/* Sub-headings — slightly recessed */
 .sub-heading {
   color: var(--gold);
   font-size: clamp(1.1rem, 2.5vw, 1.3rem);
@@ -308,80 +370,11 @@ h1 {
   line-height: 1.9;
   font-weight: 700;
   opacity: 0.95;
+  transform: translateZ(18px);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* Grid cards */
-.grid-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  margin: 30px 0;
-}
-
-.mini-card {
-  background: rgba(212,175,55,0.06);
-  border: 1px solid var(--border-gold);
-  border-radius: 18px;
-  padding: 24px 20px;
-  text-align: center;
-  transition: all 0.4s;
-  transform-style: preserve-3d;
-}
-
-.mini-card:hover {
-  transform: translateY(-6px) translateZ(20px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.4), 0 0 30px rgba(212,175,55,0.2);
-  border-color: var(--gold);
-}
-
-.mini-icon {
-  color: var(--gold);
-  font-size: 1.8rem;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.mini-card h3 {
-  color: var(--gold);
-  font-size: 1.15rem;
-  margin-bottom: 8px;
-}
-
-.mini-card p {
-  font-size: 0.95rem;
-  line-height: 2;
-  color: var(--text-soft);
-}
-
-/* Numbered list */
-.numbered-list {
-  padding-right: 30px;
-  margin: 20px 0;
-  line-height: 2.3;
-}
-
-.numbered-list li {
-  margin-bottom: 14px;
-  color: var(--text-main);
-}
-
-.numbered-list strong { color: var(--gold); }
-
-/* Final quote */
-.final-quote {
-  text-align: center;
-  font-size: clamp(1.1rem, 2.5vw, 1.35rem);
-  line-height: 2.2;
-  color: var(--gold);
-  padding: 30px 20px;
-  margin: 40px 0;
-  border: 1px solid var(--border-gold);
-  border-radius: 20px;
-  background: rgba(212,175,55,0.05);
-  font-weight: 600;
-}
-
-/* To be continued text — end of Part 1 */
+/* To be continued banner */
 .to-be-continued-text {
   text-align: center;
   font-size: clamp(1.1rem, 2.5vw, 1.3rem);
@@ -393,27 +386,9 @@ h1 {
   border-bottom: 1px solid var(--border-gold);
   max-width: 400px;
   line-height: 2;
-}
-
-/* CTA button */
-.cta-btn {
-  display: block;
-  width: fit-content;
-  margin: 40px auto 20px;
-  padding: 14px 40px;
-  background: linear-gradient(135deg, var(--gold), #b8860b);
-  color: var(--deep-green);
-  text-decoration: none;
-  border-radius: 50px;
-  font-size: 1.15rem;
-  font-weight: 700;
-  transition: all 0.4s;
-  box-shadow: 0 10px 25px rgba(212,175,55,0.3);
-}
-
-.cta-btn:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 15px 40px rgba(212,175,55,0.6);
+  transform: translateZ(30px);
+  box-shadow: 0 0 30px rgba(212,175,55,0.1);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 /* Footer */
@@ -425,6 +400,7 @@ footer {
   font-size: 1rem;
   color: var(--text-soft);
   line-height: 2;
+  transform: translateZ(15px);
 }
 
 footer .author {
@@ -451,4 +427,4 @@ footer .author {
   .nav-links a { padding: 6px 14px; font-size: 0.95rem; }
   .theme-toggle { top: 110px; left: 16px; width: 42px; height: 42px; }
   body { padding-top: 130px; }
-}
+  }
