@@ -14,6 +14,3 @@ if (themeToggle) {
     themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
   });
 }
-
-/* No 3D tilt — no glow — no floating */
-/* The 3D effect is purely in the CSS text-shadows */
